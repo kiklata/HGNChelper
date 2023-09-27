@@ -28,7 +28,7 @@
 #' checkGeneSymbols(c("Gm46568", "1-Feb"), map=new.mouse.table, species="mouse")
 #' }
 #' 
-getCurrentHumanMap <- function(){
+getCurrentHumanMap <- function(local = F,localmap = NA){
   .fixttable <- function(hgnc.table) {
     ## remove withdrawn symbols with known new name
     hgnc.table <- hgnc.table[!(duplicated(hgnc.table$Symbol) 
@@ -51,9 +51,13 @@ getCurrentHumanMap <- function(){
     hgnc.table <- hgnc.table[is.ascii, ]
     return(hgnc.table)
   }
+  if(local = T){
+    map = localmap
+  }else{
   url <- "ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/hgnc_complete_set.txt"
   message(paste("Fetching gene symbols from", url))
   map <- read.delim(url, as.is=TRUE)
+  }
   # 2 = symbol, 3=alias_symbol, 4=prev_symbol, 7=location
   # corrections
   has.corrections <- nchar(map$alias_symbol)>0 | nchar(map$prev_symbol)>0
